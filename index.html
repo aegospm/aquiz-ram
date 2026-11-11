@@ -1,1 +1,627 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Quiz de AOC: 50 desafios sobre memória RAM, DDR SDRAM, módulos, largura de banda e canais."><title>Memória em jogo · Quiz AOC</title><link rel="stylesheet" href="style.css"><script defer src="questions.js"></script><script defer src="app.js"></script></head><body><header><a href="./" class="brand"><span class="chip">▦</span> AOC<span class="divider">/</span><span class="brand-sub">Laboratório de conhecimento</span></a><span class="tag">MEMÓRIA DDR SDRAM</span></header><main><section id="welcome"><div class="eyebrow">ARQUITETURA E ORGANIZAÇÃO DE COMPUTADORES</div><div class="hero"><div><h1>Coloque sua<br><span>memória</span> em jogo.</h1><p class="lead">Da bancada de trabalho aos canais de memória.<br>Resolva situações do dia a dia e teste o que você aprendeu sobre RAM.</p><div class="hero-stats"><div><strong>50</strong><span>questões contextualizadas</span></div><div><strong>+10</strong><span>pontos por acerto</span></div><div><strong>500</strong><span>pontos possíveis</span></div></div><button id="start" class="primary">Começar o desafio <span>→</span></button><p id="resume-note" class="small">Sem cronômetro. Aprenda no seu ritmo.</p></div><div class="visual" aria-hidden="true"><div class="visual-top">MEMORY LAB <span>● ONLINE</span></div><div class="ram"><div class="ram-chips"><i></i><i></i><i></i><i></i></div><div class="ram-label">DDR SDRAM <span>64 BIT</span></div><div class="pins"></div></div><div class="signal"><span>CPU</span><b>⇄</b><span>RAM</span></div><div class="visual-bottom">DADOS · INSTRUÇÕES · POSSIBILIDADES</div><div class="orbit">2×<small>transferências<br>por ciclo DDR</small></div></div></div><div class="topics"><span>01 <b>Fundamentos</b></span><span>02 <b>Módulos</b></span><span>03 <b>Frequência DDR</b></span><span>04 <b>Largura de banda</b></span><span>05 <b>Canais</b></span></div><div class="instructions"><h2>Um desafio. Muito aprendizado.</h2><p>Escolha uma alternativa e confirme sua resposta. Cada acerto vale 10 pontos; erros não descontam pontos. Leia a explicação antes de avançar e consulte sua revisão ao final.</p><p class="small">Seu progresso é salvo apenas neste navegador, quando disponível. Nenhum cadastro é necessário.</p></div></section><section id="quiz" hidden><div class="quiz-heading"><div><span class="eyebrow">DESAFIO EM ANDAMENTO</span><h1>Uma questão de memória.</h1></div><div class="score"><small>PONTUAÇÃO</small><strong id="score">0 <span>/ 500</span></strong></div></div><div class="progress-meta"><span id="position"></span><span id="percent"></span></div><progress id="progress" max="50" value="0" aria-label="Questões respondidas"></progress><article class="question"><div class="question-top"><span id="topic" class="tag"></span><span class="small">+10 pontos por acerto</span></div><h2 id="prompt" tabindex="-1"></h2><fieldset id="options"><legend class="sr-only">Escolha uma alternativa</legend></fieldset><div id="feedback" role="status" hidden></div><div class="question-actions"><span id="hint" class="small">Selecione uma alternativa para continuar.</span><button id="confirm" class="primary" disabled>Confirmar resposta →</button><button id="next" class="primary" hidden>Próxima questão →</button></div></article><div class="below"><span>DDR SDRAM · AOC</span><button id="exit" class="text-button">Salvar e sair</button></div></section><section id="results" hidden><div class="eyebrow">DESAFIO CONCLUÍDO</div><h1>Conhecimento que<br><span>fica na memória.</span></h1><div class="result-card"><div><span class="small">SUA PONTUAÇÃO</span><strong id="final-score"></strong></div><p id="result-message"></p><div id="breakdown"></div><button id="restart" class="primary">Jogar novamente ↻</button></div><h2 class="review-title">Sua revisão, questão por questão.</h2><p class="small">Abra uma questão para rever sua resposta e a explicação.</p><div id="review"></div></section></main><footer><span>Memória em jogo <b>·</b> AOC</span><span>Baseado nos materiais de aula de Memória RAM e DDR SDRAM.</span></footer><dialog id="reset-dialog"><h2>Começar uma nova tentativa?</h2><p>A pontuação atual será reiniciada.</p><div class="question-actions"><button id="cancel-reset" class="text-button">Cancelar</button><button id="accept-reset" class="primary">Recomeçar</button></div></dialog></body></html>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Quiz de AOC: 50 desafios sobre memória RAM, DDR SDRAM, módulos, largura de banda e canais."><title>Memória em jogo · Quiz AOC</title><style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+:root{--bg:#f7f8f4;--ink:#142d28;--muted:#60706a;--green:#276547;--lime:#d7f774;--line:#dce2d9}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif}button,a,input{-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #699a20;outline-offset:4px}header{max-width:1260px;margin:auto;padding:28px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font-weight:700;font-family:'Space Grotesk',sans-serif}.chip{background:var(--ink);color:var(--lime);font-size:25px;border-radius:8px;padding:2px 8px}.divider{font-weight:400;color:#a6b0a3}.brand-sub{font-size:13px;font-weight:500}.tag{border:1px solid #cdd8c9;border-radius:6px;padding:7px 10px;font-size:10px;font-weight:700;letter-spacing:1.2px}.eyebrow{font-size:11px;letter-spacing:2px;font-weight:700;color:var(--green)}main{max-width:1180px;margin:0 auto;padding:60px 40px}h1,h2,strong{font-family:'Space Grotesk',sans-serif}h1{font-size:clamp(40px,5vw,65px);font-weight:500;line-height:1.08;letter-spacing:-3px;margin:22px 0}h1 span{color:var(--green)}.hero{display:grid;grid-template-columns:1.3fr 1fr;align-items:center;gap:60px}.lead{color:var(--muted);font-size:16px;line-height:1.8}.hero-stats{display:flex;gap:28px;margin:32px 0}.hero-stats>div{display:flex;flex-direction:column;gap:5px}.hero-stats strong{font-size:29px}.hero-stats span{font-size:11px;color:var(--muted)}.primary{background:var(--ink);color:white;border:0;border-radius:8px;padding:16px 23px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:30px;min-height:49px}.primary:hover:not(:disabled){background:var(--green)}.small{font-size:12px;color:var(--muted);line-height:1.6}.visual{height:355px;background:#e7eddf;border:1px solid #d9e2d0;border-radius:20px;position:relative;padding:25px;background-image:radial-gradient(#bdcbb4 1px,transparent 1px);background-size:18px 18px;transform:rotate(-2deg)}.visual-top,.visual-bottom{font:10px 'Space Grotesk',sans-serif;letter-spacing:1.5px}.visual-top{display:flex;justify-content:space-between}.visual-top span{color:var(--green)}.visual-bottom{position:absolute;bottom:24px;font-size:8px}.ram{position:absolute;left:9%;top:95px;width:83%;height:116px;background:#276547;border:5px solid #20513a;transform:rotate(-12deg);border-radius:8px;box-shadow:0 20px 24px #28482925}.ram-chips{display:flex;justify-content:space-around;margin:14px 7px}.ram-chips i{width:20%;height:40px;background:#152e28;border-radius:3px;border:2px solid #42624c;box-shadow:0 4px 0 #163a2b}.ram-label{color:#d6e6ca;letter-spacing:2px;font:9px monospace;margin:0 13px;display:flex;justify-content:space-between}.pins{position:absolute;bottom:-12px;left:10px;right:10px;height:12px;background:repeating-linear-gradient(90deg,#d8bc66 0 6px,transparent 6px 8px);clip-path:polygon(0 0,100% 0,100% 100%,52% 100%,52% 20%,48% 20%,48% 100%,0 100%)}.signal{display:flex;align-items:center;justify-content:center;gap:25px;position:absolute;bottom:55px;left:25%;font:12px monospace}.signal b{color:#648e50;font-size:28px}.orbit{position:absolute;right:-18px;bottom:72px;background:var(--lime);padding:18px;border-radius:14px;font:30px 'Space Grotesk',sans-serif;box-shadow:0 6px 20px #25402315;transform:rotate(5deg)}.orbit small{display:block;font:9px 'DM Sans',sans-serif;line-height:1.5}.topics{display:flex;justify-content:space-between;gap:15px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:60px 0 32px;padding:25px 0}.topics span{font:11px monospace;color:#7b956b}.topics b{font:12px 'DM Sans',sans-serif;color:var(--ink);margin-left:8px}.instructions{max-width:720px}.instructions h2{font-size:21px;font-weight:500}.instructions p{color:var(--muted);font-size:14px;line-height:1.8}footer{max-width:1180px;margin:auto;padding:25px 40px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;font-size:10px;color:var(--muted)}footer b{color:var(--green)}[hidden]{display:none!important}.quiz-heading{display:flex;justify-content:space-between;align-items:center}.quiz-heading h1{font-size:38px;letter-spacing:-1.5px}.score{padding:15px 25px;border-radius:12px;background:#e9efdf;min-width:150px}.score small{display:block;font-size:9px;letter-spacing:1px}.score strong{font-size:29px}.score strong span{font-size:13px;color:var(--muted)}.progress-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:20px 0 10px}progress{width:100%;height:6px;border:0;border-radius:20px;appearance:none;background:var(--line)}progress::-webkit-progress-bar{background:var(--line);border-radius:20px}progress::-webkit-progress-value{background:var(--green);border-radius:20px}progress::-moz-progress-bar{background:var(--green)}.question{margin-top:30px;background:white;border:1px solid var(--line);border-radius:15px;padding:35px}.question-top{display:flex;justify-content:space-between;align-items:center}.question h2{font-size:25px;line-height:1.45;font-weight:500;margin:24px 0}.question h2:focus{outline:none}fieldset{padding:0;border:0;margin:0;display:grid;gap:10px}.option{display:flex;align-items:center;gap:15px;position:relative;border:1px solid var(--line);border-radius:9px;padding:15px;cursor:pointer;font-size:14px;line-height:1.5}.option input{position:absolute;opacity:0}.letter{width:30px;height:30px;flex-shrink:0;display:grid;place-items:center;background:#f0f3ec;border-radius:5px;font:12px 'Space Grotesk',sans-serif}.option:has(input:checked){border-color:var(--green);background:#f2f8ea}.option:has(input:focus-visible){outline:3px solid #8bab61;outline-offset:2px}.option.correct{border-color:#2d8152;background:#edf8ee}.option.wrong{border-color:#b85a44;background:#fff2ec}.option.locked{cursor:default}.state-label{margin-left:auto;font-size:11px;font-weight:700;white-space:nowrap}#feedback{margin-top:20px;padding:18px;background:#f0f5e8;border-left:3px solid var(--green);border-radius:5px;font-size:14px;line-height:1.8}#feedback strong{display:block;margin-bottom:5px}.question-actions{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:25px}.below{display:flex;justify-content:space-between;align-items:center;margin:20px 0;color:var(--muted);font-size:11px}.text-button{background:none;border:0;color:var(--green);text-decoration:underline;font-size:12px;padding:8px}.result-card{background:white;border:1px solid var(--line);border-radius:15px;padding:30px;max-width:750px}.result-card strong{display:block;font-size:50px;color:var(--green)}.result-card>p{color:var(--muted)}#breakdown{margin:25px 0;display:grid;gap:10px}.break-row{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:9px 0;font-size:13px}.review-title{margin-top:45px}details{border:1px solid var(--line);border-radius:9px;background:white;padding:18px;margin:10px 0}summary{cursor:pointer;font-size:14px;line-height:1.6}details p{font-size:13px;line-height:1.8;color:var(--muted)}dialog{border:1px solid var(--line);border-radius:15px;padding:30px;max-width:calc(100% - 32px)}dialog::backdrop{background:#10251c99}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:760px){header{padding:20px}.brand-sub{display:none}header>.tag{font-size:8px}main{padding:35px 20px}.hero{grid-template-columns:1fr;gap:30px}h1{letter-spacing:-2px}.visual{max-width:430px;width:95%;height:290px;margin:10px auto}.ram{top:70px}.hero-stats{gap:22px}.hero-stats span{max-width:90px;line-height:1.6}.topics{flex-wrap:wrap;justify-content:flex-start;margin-top:35px;gap:20px}.topics span{width:44%}.question{padding:22px 16px}.quiz-heading{gap:15px}.quiz-heading h1{font-size:26px}.score{padding:12px;min-width:110px}.score strong{font-size:25px}.question h2{font-size:21px}.question-top .small{font-size:10px}.question-actions{flex-wrap:wrap}.question-actions .primary{width:100%}.option{font-size:13px;padding:12px}.state-label{white-space:normal;font-size:10px}footer{padding:20px;flex-direction:column;gap:10px}.eyebrow{font-size:9px;line-height:1.8}}
+
+</style></head><body><header><a href="./" class="brand"><span class="chip">▦</span> AOC<span class="divider">/</span><span class="brand-sub">Laboratório de conhecimento</span></a><span class="tag">MEMÓRIA DDR SDRAM</span></header><main><section id="welcome"><div class="eyebrow">ARQUITETURA E ORGANIZAÇÃO DE COMPUTADORES</div><div class="hero"><div><h1>Coloque sua<br><span>memória</span> em jogo.</h1><p class="lead">Da bancada de trabalho aos canais de memória.<br>Resolva situações do dia a dia e teste o que você aprendeu sobre RAM.</p><div class="hero-stats"><div><strong>50</strong><span>questões contextualizadas</span></div><div><strong>+10</strong><span>pontos por acerto</span></div><div><strong>500</strong><span>pontos possíveis</span></div></div><button id="start" class="primary">Começar o desafio <span>→</span></button><p id="resume-note" class="small">Sem cronômetro. Aprenda no seu ritmo.</p></div><div class="visual" aria-hidden="true"><div class="visual-top">MEMORY LAB <span>● ONLINE</span></div><div class="ram"><div class="ram-chips"><i></i><i></i><i></i><i></i></div><div class="ram-label">DDR SDRAM <span>64 BIT</span></div><div class="pins"></div></div><div class="signal"><span>CPU</span><b>⇄</b><span>RAM</span></div><div class="visual-bottom">DADOS · INSTRUÇÕES · POSSIBILIDADES</div><div class="orbit">2×<small>transferências<br>por ciclo DDR</small></div></div></div><div class="topics"><span>01 <b>Fundamentos</b></span><span>02 <b>Módulos</b></span><span>03 <b>Frequência DDR</b></span><span>04 <b>Largura de banda</b></span><span>05 <b>Canais</b></span></div><div class="instructions"><h2>Um desafio. Muito aprendizado.</h2><p>Escolha uma alternativa e confirme sua resposta. Cada acerto vale 10 pontos; erros não descontam pontos. Leia a explicação antes de avançar e consulte sua revisão ao final.</p><p class="small">Seu progresso é salvo apenas neste navegador, quando disponível. Nenhum cadastro é necessário.</p></div></section><section id="quiz" hidden><div class="quiz-heading"><div><span class="eyebrow">DESAFIO EM ANDAMENTO</span><h1>Uma questão de memória.</h1></div><div class="score"><small>PONTUAÇÃO</small><strong id="score">0 <span>/ 500</span></strong></div></div><div class="progress-meta"><span id="position"></span><span id="percent"></span></div><progress id="progress" max="50" value="0" aria-label="Questões respondidas"></progress><article class="question"><div class="question-top"><span id="topic" class="tag"></span><span class="small">+10 pontos por acerto</span></div><h2 id="prompt" tabindex="-1"></h2><fieldset id="options"><legend class="sr-only">Escolha uma alternativa</legend></fieldset><div id="feedback" role="status" hidden></div><div class="question-actions"><span id="hint" class="small">Selecione uma alternativa para continuar.</span><button id="confirm" class="primary" disabled>Confirmar resposta →</button><button id="next" class="primary" hidden>Próxima questão →</button></div></article><div class="below"><span>DDR SDRAM · AOC</span><button id="exit" class="text-button">Salvar e sair</button></div></section><section id="results" hidden><div class="eyebrow">DESAFIO CONCLUÍDO</div><h1>Conhecimento que<br><span>fica na memória.</span></h1><div class="result-card"><div><span class="small">SUA PONTUAÇÃO</span><strong id="final-score"></strong></div><p id="result-message"></p><div id="breakdown"></div><button id="restart" class="primary">Jogar novamente ↻</button></div><h2 class="review-title">Sua revisão, questão por questão.</h2><p class="small">Abra uma questão para rever sua resposta e a explicação.</p><div id="review"></div></section></main><footer><span>Memória em jogo <b>·</b> AOC</span><span>Baseado nos materiais de aula de Memória RAM e DDR SDRAM.</span></footer><dialog id="reset-dialog"><h2>Começar uma nova tentativa?</h2><p>A pontuação atual será reiniciada.</p><div class="question-actions"><button id="cancel-reset" class="text-button">Cancelar</button><button id="accept-reset" class="primary">Recomeçar</button></div></dialog><script>
+const QUESTIONS = [
+  {
+    "topic": "Fundamentos",
+    "prompt": "Durante uma edição de vídeo, onde ficam temporariamente os dados e as instruções em uso?",
+    "options": [
+      "Na memória RAM",
+      "Somente no pendrive",
+      "Na fonte de alimentação",
+      "Apenas no monitor"
+    ],
+    "answer": 0,
+    "explanation": "A RAM é a memória de trabalho que mantém dados e instruções disponíveis durante o uso."
+  },
+  {
+    "topic": "Fundamentos",
+    "prompt": "Após uma queda de energia, um texto não salvo foi perdido. Que característica da RAM explica isso?",
+    "options": [
+      "Volatilidade",
+      "Armazenamento permanente",
+      "Correção ECC",
+      "Acesso sequencial obrigatório"
+    ],
+    "answer": 0,
+    "explanation": "A RAM perde seu conteúdo sem alimentação elétrica. Arquivos salvos permanecem no armazenamento."
+  },
+  {
+    "topic": "Fundamentos",
+    "prompt": "Ao ligar o computador do laboratório, de onde o sistema operacional é carregado para a RAM?",
+    "options": [
+      "Do armazenamento, como SSD ou HD",
+      "Do teclado",
+      "Da memória do monitor",
+      "Da fonte"
+    ],
+    "answer": 0,
+    "explanation": "Durante o boot, instruções e dados do sistema são carregados do armazenamento para a memória principal."
+  },
+  {
+    "topic": "Fundamentos",
+    "prompt": "Uma turma representa o caminho usual dos dados para execução. Qual sequência está adequada?",
+    "options": [
+      "Armazenamento → RAM → cache → processador",
+      "RAM → SSD → tomada → CPU",
+      "Monitor → HD → teclado → CPU",
+      "SSD → impressora → RAM → CPU"
+    ],
+    "answer": 0,
+    "explanation": "A RAM e a cache deixam dados e instruções disponíveis para a CPU executar."
+  },
+  {
+    "topic": "Fundamentos",
+    "prompt": "Um computador fica lento com muitas abas e usa intensamente o arquivo de troca. Qual upgrade tende a ajudar?",
+    "options": [
+      "Aumentar a RAM compatível",
+      "Trocar apenas o cabo do monitor",
+      "Diminuir a capacidade da RAM",
+      "Adicionar uma unidade de DVD"
+    ],
+    "answer": 0,
+    "explanation": "Mais RAM pode reduzir a necessidade de transferir páginas para o armazenamento, diminuindo esse gargalo."
+  },
+  {
+    "topic": "Fundamentos",
+    "prompt": "Uma estação já tem RAM sobrando, mas a CPU está no limite. Dobrar a RAM garante maior velocidade de cálculo?",
+    "options": [
+      "Não; depende do gargalo existente",
+      "Sim; duplica os núcleos",
+      "Sim; dobra o clock da CPU",
+      "Sim; elimina qualquer lentidão"
+    ],
+    "answer": 0,
+    "explanation": "Aumentar a capacidade da RAM não aumenta o poder de cálculo do processador."
+  },
+  {
+    "topic": "Fundamentos",
+    "prompt": "Ao faltar RAM, o sistema move páginas pouco usadas para um arquivo no SSD. Qual recurso está sendo utilizado?",
+    "options": [
+      "Arquivo de troca, como apoio à memória virtual",
+      "Dual channel",
+      "ECC",
+      "Registrador RDIMM"
+    ],
+    "answer": 0,
+    "explanation": "O sistema operacional gerencia a movimentação de páginas entre a RAM e o arquivo de troca."
+  },
+  {
+    "topic": "Fundamentos",
+    "prompt": "Por que alternar entre programas pode ficar lento quando há muita troca de páginas?",
+    "options": [
+      "O armazenamento é mais lento que a RAM",
+      "O SSD passa a operar como cache da CPU",
+      "A RAM deixa de ser volátil",
+      "O monitor precisa armazenar as páginas"
+    ],
+    "answer": 0,
+    "explanation": "Acessar dados no SSD ou HD custa mais tempo que acessá-los na RAM."
+  },
+  {
+    "topic": "Fundamentos",
+    "prompt": "Ao comparar componentes, qual ordem geral de velocidade corresponde ao material?",
+    "options": [
+      "Cache > RAM > SSD > HD",
+      "HD > SSD > RAM > cache",
+      "RAM > cache > HD > SSD",
+      "SSD > HD > cache > RAM"
+    ],
+    "answer": 0,
+    "explanation": "A hierarquia aproxima os dados mais usados da CPU usando memórias mais rápidas."
+  },
+  {
+    "topic": "Fundamentos",
+    "prompt": "Um aluno chama a pequena placa com vários chips de “pente”. Qual termo deve usar no relatório?",
+    "options": [
+      "Módulo de memória",
+      "Soquete do processador",
+      "Canal de vídeo",
+      "Arquivo de troca"
+    ],
+    "answer": 0,
+    "explanation": "O módulo é a placa que reúne chips de memória; o soquete é o encaixe que o recebe."
+  },
+  {
+    "topic": "Módulos",
+    "prompt": "Uma equipe monta um desktop com slots tradicionais de RAM. Qual formato é mais comum nesse cenário?",
+    "options": [
+      "DIMM",
+      "LPCAMM2 obrigatório",
+      "Cartão microSD",
+      "SIM de telefonia"
+    ],
+    "answer": 0,
+    "explanation": "DIMM é o formato tradicional de desktops e muitos servidores."
+  },
+  {
+    "topic": "Módulos",
+    "prompt": "Um notebook com memória substituível exige um módulo compacto do formato tradicional. Qual é a escolha provável?",
+    "options": [
+      "SODIMM",
+      "DIMM de desktop sem verificar",
+      "SSD SATA",
+      "RDIMM obrigatório"
+    ],
+    "answer": 0,
+    "explanation": "SODIMM ocupa menos espaço e é comum em notebooks e mini PCs; a compatibilidade ainda deve ser verificada."
+  },
+  {
+    "topic": "Módulos",
+    "prompt": "Na comparação com o antigo SIMM, o que distingue os contatos de um DIMM?",
+    "options": [
+      "Os contatos dos dois lados são eletricamente independentes",
+      "Os dois lados sempre têm a mesma conexão elétrica",
+      "Ele não possui contatos",
+      "Ele usa apenas conexão sem fio"
+    ],
+    "answer": 0,
+    "explanation": "Contatos independentes permitem mais sinais; no SIMM, os contatos dos dois lados tinham a mesma função elétrica."
+  },
+  {
+    "topic": "Módulos",
+    "prompt": "Um módulo DDR3 não encaixa em uma placa DDR4. Qual é a conduta correta?",
+    "options": [
+      "Verificar a geração e usar um módulo compatível, sem forçar",
+      "Lixar o entalhe",
+      "Forçar até encaixar",
+      "Inverter a alimentação"
+    ],
+    "answer": 0,
+    "explanation": "Gerações DDR possuem diferenças físicas e elétricas. O entalhe ajuda a impedir instalações incompatíveis."
+  },
+  {
+    "topic": "Módulos",
+    "prompt": "Uma loja anuncia DIMM e DDR5 como se fossem categorias equivalentes. Qual explicação está correta?",
+    "options": [
+      "DIMM é formato físico; DDR5 é geração da memória",
+      "Ambos indicam apenas capacidade",
+      "DIMM é uma taxa em MT/s",
+      "DDR5 é o tamanho do módulo"
+    ],
+    "answer": 0,
+    "explanation": "Formato, geração, capacidade e taxa são características diferentes e devem ser conferidas separadamente."
+  },
+  {
+    "topic": "Módulos",
+    "prompt": "O manual de um desktop pede UDIMM. O que caracteriza esse tipo?",
+    "options": [
+      "Ausência de registrador adicional do tipo usado em RDIMM",
+      "Presença obrigatória de buffers LRDIMM",
+      "Uso exclusivo em smartphones",
+      "Armazenamento não volátil"
+    ],
+    "answer": 0,
+    "explanation": "UDIMM é um módulo sem o registrador adicional usado por RDIMM, comum em desktops."
+  },
+  {
+    "topic": "Módulos",
+    "prompt": "Um servidor precisa de estabilidade com muitos módulos. Qual é a função do registrador de um RDIMM?",
+    "options": [
+      "Reduzir a carga elétrica dos sinais de controle sobre o controlador",
+      "Aumentar a resolução do monitor",
+      "Transformar RAM em SSD",
+      "Dobrar os núcleos da CPU"
+    ],
+    "answer": 0,
+    "explanation": "O registrador intermedeia sinais de controle, ajudando a manter estabilidade em configurações com mais memória."
+  },
+  {
+    "topic": "Módulos",
+    "prompt": "Um projeto de servidor considera LRDIMM de alta capacidade. Qual recurso explica a redução de carga?",
+    "options": [
+      "Registrador e buffers de dados",
+      "Somente um dissipador colorido",
+      "Ausência de chips de memória",
+      "Arquivo de troca interno"
+    ],
+    "answer": 0,
+    "explanation": "Os buffers ajudam a isolar a carga dos chips em relação ao controlador, favorecendo maior capacidade."
+  },
+  {
+    "topic": "Módulos",
+    "prompt": "Uma aplicação exige verificação e correção de erros na RAM. Qual recurso deve ser considerado?",
+    "options": [
+      "ECC, com suporte do módulo, da placa e da CPU",
+      "SODIMM por si só",
+      "RGB no módulo",
+      "Apenas maior capacidade em GiB"
+    ],
+    "answer": 0,
+    "explanation": "ECC usa bits de verificação. Para o recurso funcionar, a plataforma inteira precisa oferecer suporte."
+  },
+  {
+    "topic": "Módulos",
+    "prompt": "Uma equipe projeta um portátil fino com LPCAMM2. Qual tecnologia e prioridade combinam com esse formato?",
+    "options": [
+      "LPDDR5/LPDDR5X e baixo consumo",
+      "DDR3 e uso exclusivo em desktop",
+      "Memória magnética e acesso mecânico",
+      "HD e armazenamento permanente"
+    ],
+    "answer": 0,
+    "explanation": "LPCAMM2 utiliza LPDDR5 ou LPDDR5X e favorece baixo consumo em portáteis. CAMM2 tem instalação plana e depende do projeto da plataforma."
+  },
+  {
+    "topic": "Frequência DDR",
+    "prompt": "Um diagnóstico informa clock de 1.600.000.000 Hz em DDR4. Qual conversão para MHz está correta?",
+    "options": [
+      "1.600 MHz",
+      "160 MHz",
+      "16.000 MHz",
+      "3.200 MHz"
+    ],
+    "answer": 0,
+    "explanation": "Divida Hz por 1.000.000: 1.600.000.000 ÷ 1.000.000 = 1.600 MHz."
+  },
+  {
+    "topic": "Frequência DDR",
+    "prompt": "Um módulo DDR4 opera com clock de 1.600 MHz. Considerando duas transferências por ciclo, qual é a taxa?",
+    "options": [
+      "3.200 MT/s",
+      "800 MT/s",
+      "1.600 MT/s",
+      "25.600 MT/s"
+    ],
+    "answer": 0,
+    "explanation": "DDR realiza duas transferências por ciclo: 1.600 × 2 = 3.200 MT/s."
+  },
+  {
+    "topic": "Frequência DDR",
+    "prompt": "No laboratório, o clock de um módulo DDR4 é 1.200.000.000 Hz. Qual classificação corresponde a ele?",
+    "options": [
+      "DDR4-2400",
+      "DDR4-1200",
+      "DDR4-4800",
+      "PC4-1200"
+    ],
+    "answer": 0,
+    "explanation": "O clock é 1.200 MHz; multiplicando por 2, temos 2.400 MT/s."
+  },
+  {
+    "topic": "Frequência DDR",
+    "prompt": "Um módulo DDR4 tem clock informado como 1.333 MHz. Qual taxa nominal aproximada deve ser associada?",
+    "options": [
+      "2.666 MT/s",
+      "1.333 MT/s",
+      "666 MT/s",
+      "10.664 MT/s"
+    ],
+    "answer": 0,
+    "explanation": "Usando o valor aproximado do enunciado: 1.333 × 2 = 2.666 MT/s."
+  },
+  {
+    "topic": "Frequência DDR",
+    "prompt": "Uma ficha traz clock arredondado de 1.066 MHz. Qual classificação comercial aproximada aparece no material?",
+    "options": [
+      "DDR4-2133",
+      "DDR4-1066",
+      "DDR4-4266",
+      "DDR4-3200"
+    ],
+    "answer": 0,
+    "explanation": "1.066 × 2 = 2.132 MT/s; o valor nominal comercial aproximado citado é 2.133 MT/s."
+  },
+  {
+    "topic": "Frequência DDR",
+    "prompt": "Um módulo DDR4 opera a 1.500 MHz. Qual é sua taxa efetiva?",
+    "options": [
+      "3.000 MT/s",
+      "1.500 MT/s",
+      "750 MT/s",
+      "12.000 MT/s"
+    ],
+    "answer": 0,
+    "explanation": "A taxa DDR é duas vezes o clock em MHz: 1.500 × 2 = 3.000 MT/s."
+  },
+  {
+    "topic": "Frequência DDR",
+    "prompt": "Uma bancada mede clock de 1.800 MHz em DDR4. Qual classificação corresponde à taxa calculada?",
+    "options": [
+      "DDR4-3600",
+      "DDR4-1800",
+      "DDR4-7200",
+      "DDR4-900"
+    ],
+    "answer": 0,
+    "explanation": "1.800 × 2 = 3.600 MT/s, portanto DDR4-3600."
+  },
+  {
+    "topic": "Frequência DDR",
+    "prompt": "Um aluno precisa achar o clock de uma DDR4-3200. Qual valor aproximado em Hz é adequado?",
+    "options": [
+      "1.600.000.000 Hz",
+      "3.200.000.000 Hz",
+      "800.000.000 Hz",
+      "25.600.000.000 Hz"
+    ],
+    "answer": 0,
+    "explanation": "3.200 ÷ 2 = 1.600 MHz; multiplicando por 1.000.000, obtemos o clock em Hz."
+  },
+  {
+    "topic": "Frequência DDR",
+    "prompt": "Ao ler DDR4-3200, uma aluna diz que 3200 é a capacidade em MB. O que esse número representa?",
+    "options": [
+      "Taxa efetiva de 3.200 MT/s",
+      "Capacidade de 3.200 MB",
+      "Clock real de 3.200 MHz",
+      "Número de chips no módulo"
+    ],
+    "answer": 0,
+    "explanation": "No nome DDRx-y, x é a geração e y é a taxa efetiva em MT/s."
+  },
+  {
+    "topic": "Frequência DDR",
+    "prompt": "Um relatório usa MHz e MT/s como se fossem sempre iguais. Como corrigir a explicação para DDR?",
+    "options": [
+      "MHz mede ciclos por segundo; MT/s mede transferências, duas por ciclo em DDR",
+      "MHz mede capacidade e MT/s mede tensão",
+      "As unidades sempre têm o mesmo valor em DDR",
+      "MT/s mede apenas o número de canais"
+    ],
+    "answer": 0,
+    "explanation": "MHz é frequência de clock; MT/s é taxa de transferências. Em DDR, a taxa numérica em MT/s é o dobro do clock em MHz."
+  },
+  {
+    "topic": "Largura de banda",
+    "prompt": "Um módulo transfere 64 bits úteis por operação. Quantos bytes isso representa?",
+    "options": [
+      "8 bytes",
+      "64 bytes",
+      "512 bytes",
+      "4 bytes"
+    ],
+    "answer": 0,
+    "explanation": "Um byte contém 8 bits: 64 ÷ 8 = 8 bytes."
+  },
+  {
+    "topic": "Largura de banda",
+    "prompt": "Uma equipe quer calcular a largura de banda de um caminho útil de 64 bits. Qual fórmula deve usar?",
+    "options": [
+      "MT/s × 8 = MB/s",
+      "MT/s ÷ 64 = MB/s",
+      "GiB × 8 = MB/s",
+      "MHz + GiB = MB/s"
+    ],
+    "answer": 0,
+    "explanation": "64 bits equivalem a 8 bytes. A taxa em milhões de transferências por segundo multiplicada por 8 resulta em MB/s."
+  },
+  {
+    "topic": "Largura de banda",
+    "prompt": "Um único caminho de 64 bits usa DDR4-3200. Qual é a largura de banda teórica?",
+    "options": [
+      "25.600 MB/s",
+      "3.200 MB/s",
+      "51.200 MB/s",
+      "12.800 MB/s"
+    ],
+    "answer": 0,
+    "explanation": "3.200 × 8 = 25.600 MB/s. Trata-se de um máximo teórico."
+  },
+  {
+    "topic": "Largura de banda",
+    "prompt": "Uma estação usa DDR5-5600, considerando 64 bits úteis no total por módulo. Qual largura de banda teórica resulta?",
+    "options": [
+      "44.800 MB/s",
+      "5.600 MB/s",
+      "22.400 MB/s",
+      "89.600 MB/s"
+    ],
+    "answer": 0,
+    "explanation": "5.600 × 8 = 44.800 MB/s, somando os 64 bits úteis do módulo."
+  },
+  {
+    "topic": "Largura de banda",
+    "prompt": "O rótulo de uma memória indica PC4-25600. Qual identificação DDR é equivalente?",
+    "options": [
+      "DDR4-3200",
+      "DDR4-25600",
+      "DDR5-3200",
+      "DDR4-1600"
+    ],
+    "answer": 0,
+    "explanation": "PC4 indica DDR4; 25.600 ÷ 8 = 3.200 MT/s."
+  },
+  {
+    "topic": "Largura de banda",
+    "prompt": "Uma aluna precisa escrever o nome PC correspondente a DDR5-5600. Qual opção deve escolher?",
+    "options": [
+      "PC5-44800",
+      "PC4-44800",
+      "PC5-5600",
+      "PC5-11200"
+    ],
+    "answer": 0,
+    "explanation": "A geração é 5 e a largura de banda é 5.600 × 8 = 44.800 MB/s."
+  },
+  {
+    "topic": "Largura de banda",
+    "prompt": "Uma ficha informa PC5-48000 em um módulo de 64 bits úteis. Qual taxa efetiva está implícita?",
+    "options": [
+      "6.000 MT/s",
+      "48.000 MT/s",
+      "3.000 MT/s",
+      "384.000 MT/s"
+    ],
+    "answer": 0,
+    "explanation": "48.000 ÷ 8 = 6.000 MT/s, isto é, DDR5-6000."
+  },
+  {
+    "topic": "Largura de banda",
+    "prompt": "O cálculo de DDR4-2666 deu 21.328 MB/s, mas a etiqueta diz PC4-21300. Como interpretar?",
+    "options": [
+      "O rótulo usa uma aproximação comercial da largura de banda",
+      "A geração mudou para DDR3",
+      "O módulo tem necessariamente defeito",
+      "Os 21.300 indicam capacidade em GiB"
+    ],
+    "answer": 0,
+    "explanation": "2.666 × 8 = 21.328 MB/s. Algumas identificações PC usam valores arredondados."
+  },
+  {
+    "topic": "Largura de banda",
+    "prompt": "Uma simulação usa caminho de apenas 32 bits a 3.200 MT/s. Qual largura de banda teórica deve mostrar?",
+    "options": [
+      "12.800 MB/s",
+      "25.600 MB/s",
+      "102.400 MB/s",
+      "3.200 MB/s"
+    ],
+    "answer": 0,
+    "explanation": "32 ÷ 8 = 4 bytes por transferência; 3.200 × 4 = 12.800 MB/s."
+  },
+  {
+    "topic": "Largura de banda",
+    "prompt": "Uma compra compara DDR4-3600 e DDR5-4800 em caminhos de 64 bits. Qual a diferença de largura de banda teórica?",
+    "options": [
+      "9.600 MB/s",
+      "1.200 MB/s",
+      "38.400 MB/s",
+      "28.800 MB/s"
+    ],
+    "answer": 0,
+    "explanation": "DDR4-3600: 28.800 MB/s; DDR5-4800: 38.400 MB/s. Diferença: 9.600 MB/s. Isso não garante a mesma diferença no desempenho real."
+  },
+  {
+    "topic": "Canais",
+    "prompt": "Ao explicar o controlador de memória, um aluno pergunta o que é um canal. Qual definição é adequada?",
+    "options": [
+      "Caminho independente de comunicação entre o controlador e a RAM",
+      "Cabo de vídeo ligado ao monitor",
+      "Partição obrigatória do SSD",
+      "Quantidade de chips de um módulo"
+    ],
+    "answer": 0,
+    "explanation": "Um canal é uma ligação elétrica e lógica controlada pela CPU e pelo projeto da placa-mãe."
+  },
+  {
+    "topic": "Canais",
+    "prompt": "Dois módulos DDR4-3200 ocupam canais distintos em dual channel. Qual é a largura de banda teórica total?",
+    "options": [
+      "51.200 MB/s",
+      "25.600 MB/s",
+      "6.400 MB/s",
+      "102.400 MB/s"
+    ],
+    "answer": 0,
+    "explanation": "Cada canal fornece 25.600 MB/s; dois canais em paralelo somam 51.200 MB/s."
+  },
+  {
+    "topic": "Canais",
+    "prompt": "Uma turma compara 1 × 16 GiB com 2 × 8 GiB em uma plataforma dual channel. Qual vantagem a segunda opção pode oferecer?",
+    "options": [
+      "Mesma capacidade total com maior largura de banda",
+      "Dobro da capacidade total",
+      "Dobro do clock da CPU",
+      "Garantia de dobro de FPS em qualquer jogo"
+    ],
+    "answer": 0,
+    "explanation": "As duas opções têm 16 GiB. Distribuir os módulos em dois canais permite maior fluxo teórico de dados."
+  },
+  {
+    "topic": "Canais",
+    "prompt": "Um computador tem quatro slots e quatro módulos. Isso prova que ele está em quad channel?",
+    "options": [
+      "Não; depende do controlador e do projeto da placa",
+      "Sim; cada slot é sempre um canal",
+      "Sim; basta ter DDR4",
+      "Não; computadores nunca possuem quatro canais"
+    ],
+    "answer": 0,
+    "explanation": "Uma plataforma dual channel pode ter dois slots por canal. Quantidade de slots não determina o número de canais."
+  },
+  {
+    "topic": "Canais",
+    "prompt": "Uma placa com quatro slots receberá dois módulos. Qual orientação de instalação é a mais adequada?",
+    "options": [
+      "Consultar o manual; A2 e B2 são uma combinação comum",
+      "Escolher sempre os slots mais próximos da CPU",
+      "Usar sempre dois slots vizinhos",
+      "Ocupar qualquer slot sem conferir"
+    ],
+    "answer": 0,
+    "explanation": "A2 e B2 são comuns, mas a ordem correta depende da placa-mãe e deve ser confirmada no manual."
+  },
+  {
+    "topic": "Canais",
+    "prompt": "Uma plataforma com modo flexível tem 8 GiB em um canal e 16 GiB no outro. Como a capacidade pode operar?",
+    "options": [
+      "16 GiB em dual channel e 8 GiB em single channel",
+      "24 GiB integralmente em dual channel",
+      "Apenas 8 GiB ficam disponíveis",
+      "Toda a memória deixa de funcionar"
+    ],
+    "answer": 0,
+    "explanation": "8 GiB de cada canal formam 16 GiB em paralelo; os 8 GiB excedentes operam em um canal, conforme suporte da plataforma."
+  },
+  {
+    "topic": "Canais",
+    "prompt": "Um laboratório distribui 2 × 8 GiB e 2 × 16 GiB em uma placa dual channel. Como equilibrar os canais?",
+    "options": [
+      "Colocar 8 + 16 GiB em cada canal, seguindo o manual",
+      "Colocar os dois de 16 GiB em um canal e os de 8 GiB no outro",
+      "Usar apenas um módulo de cada vez",
+      "Considerar automaticamente quad channel"
+    ],
+    "answer": 0,
+    "explanation": "Cada canal fica com 24 GiB; a capacidade total é 48 GiB. A distribuição física deve seguir o manual."
+  },
+  {
+    "topic": "Canais",
+    "prompt": "Dois caminhos de 64 bits com DDR5-5600 trabalham em paralelo. Qual total teórico deve constar no relatório?",
+    "options": [
+      "89.600 MB/s",
+      "44.800 MB/s",
+      "11.200 MB/s",
+      "179.200 MB/s"
+    ],
+    "answer": 0,
+    "explanation": "5.600 × 8 = 44.800 MB/s por caminho; multiplicando por 2, temos 89.600 MB/s."
+  },
+  {
+    "topic": "Canais",
+    "prompt": "Após ativar dual channel, um aluno espera que todo programa fique duas vezes mais rápido. Qual explicação está correta?",
+    "options": [
+      "A largura de banda teórica pode dobrar, mas o desempenho depende da aplicação e de outros gargalos",
+      "A capacidade da RAM sempre dobra",
+      "O clock da CPU sempre dobra",
+      "Qualquer programa passa a executar em metade do tempo"
+    ],
+    "answer": 0,
+    "explanation": "O ganho real depende de quanto a tarefa precisa de largura de banda e de outros limites do sistema."
+  },
+  {
+    "topic": "Canais",
+    "prompt": "Antes de comprar RAM para uma workstation com vários canais, o que a equipe deve verificar?",
+    "options": [
+      "Canais e memórias aceitos pela CPU, manual da placa e distribuição dos módulos",
+      "Somente a cor do dissipador",
+      "Apenas a quantidade de slots visíveis",
+      "Somente a marca do gabinete"
+    ],
+    "answer": 0,
+    "explanation": "CPU e placa definem a plataforma; módulos compatíveis e capacidades equilibradas permitem aproveitar os canais disponíveis."
+  }
+];
+
+'use strict';
+const $=id=>document.getElementById(id), KEY='aoc-ddr-quiz-v1';
+let state={answers:[],orders:[]},selected=null;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function valid(s){return s&&Array.isArray(s.answers)&&s.answers.length<=50&&s.answers.every(a=>Number.isInteger(a)&&a>=0&&a<4)&&Array.isArray(s.orders)&&s.orders.length===50&&s.orders.every(a=>Array.isArray(a)&&a.length===4&&new Set(a).size===4&&a.every(v=>Number.isInteger(v)&&v>=0&&v<4))}
+try{const s=JSON.parse(localStorage.getItem(KEY));if(valid(s))state=s}catch{}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}}
+function fresh(){state={answers:[],orders:QUESTIONS.map(()=>shuffle([0,1,2,3]))};save()}
+function points(){return state.answers.reduce((n,a,i)=>n+(a===QUESTIONS[i].answer?10:0),0)}
+function show(id){['welcome','quiz','results'].forEach(x=>$(x).hidden=x!==id);window.scrollTo({top:0,behavior:'instant'})}
+function welcome(){show('welcome');if(state.answers.length){$('start').textContent=state.answers.length===50?'Ver meu resultado →':'Continuar o desafio →';$('resume-note').textContent=`${state.answers.length} de 50 respondidas · ${points()} pontos salvos neste navegador.`}}
+function render(){if(state.answers.length===50){results();return}const i=state.answers.length,q=QUESTIONS[i];selected=null;show('quiz');$('score').replaceChildren(document.createTextNode(points()+' '));const total=document.createElement('span');total.textContent='/ 500';$('score').append(total);$('position').textContent=`Questão ${i+1} de 50`;$('percent').textContent=`${i*2}% concluído`;$('progress').value=i;$('topic').textContent=q.topic;$('prompt').textContent=q.prompt;$('options').replaceChildren();state.orders[i].forEach((value,pos)=>{const label=document.createElement('label');label.className='option';const input=document.createElement('input');input.type='radio';input.name='answer';input.value=value;input.addEventListener('change',()=>{selected=value;$('confirm').disabled=false;$('hint').textContent='Pronto para confirmar sua resposta.'});const letter=document.createElement('span');letter.className='letter';letter.textContent='ABCD'[pos];const content=document.createElement('span');content.textContent=q.options[value];label.append(input,letter,content);$('options').append(label)});$('feedback').hidden=true;$('confirm').hidden=false;$('confirm').disabled=true;$('next').hidden=true;$('hint').textContent='Selecione uma alternativa para continuar.';$('prompt').focus()}
+$('start').onclick=()=>{if(!state.orders.length)fresh();render()};
+$('confirm').onclick=()=>{if(selected===null||$('confirm').hidden)return;const i=state.answers.length,q=QUESTIONS[i],right=selected===q.answer;state.answers.push(selected);save();document.querySelectorAll('.option').forEach(label=>{const input=label.querySelector('input'),v=Number(input.value);input.disabled=true;label.classList.add('locked');if(v===q.answer||v===selected){label.classList.add(v===q.answer?'correct':'wrong');const badge=document.createElement('span');badge.className='state-label';badge.textContent=v===q.answer?'✓ Correta':'✕ Sua resposta';label.append(badge)}});$('score').firstChild.textContent=points()+' ';$('progress').value=state.answers.length;$('percent').textContent=`${state.answers.length*2}% concluído`;$('feedback').replaceChildren();const title=document.createElement('strong');title.textContent=right?'Muito bem! +10 pontos':'Vamos aprender com essa! +0 pontos';const explanation=document.createElement('span');explanation.textContent=q.explanation;$('feedback').append(title,explanation);$('feedback').hidden=false;$('hint').textContent='Leia a explicação antes de avançar.';$('confirm').hidden=true;$('next').hidden=false;$('next').textContent=i===49?'Ver meu resultado →':'Próxima questão →'};
+$('next').onclick=render;$('exit').onclick=welcome;
+function results(){show('results');const score=points();$('final-score').textContent=`${score} / 500`;$('result-message').textContent=`Você acertou ${score/10} de 50 questões (${score/5}%). `+(score>=400?'Excelente trabalho! Continue conectando os conceitos.':score>=300?'Bom trabalho! Revise as explicações para consolidar os conceitos.':'Cada tentativa é uma oportunidade de aprender. Revise os temas abaixo e tente novamente.');$('breakdown').replaceChildren();[...new Set(QUESTIONS.map(q=>q.topic))].forEach(topic=>{const ids=QUESTIONS.map((q,i)=>q.topic===topic?i:-1).filter(i=>i>=0),n=ids.filter(i=>state.answers[i]===QUESTIONS[i].answer).length;const row=document.createElement('div');row.className='break-row';const name=document.createElement('span');name.textContent=topic;const val=document.createElement('b');val.textContent=`${n} / ${ids.length} acertos`;row.append(name,val);$('breakdown').append(row)});$('review').replaceChildren();QUESTIONS.forEach((q,i)=>{const details=document.createElement('details'),summary=document.createElement('summary');summary.textContent=`${state.answers[i]===q.answer?'✓':'✕'} ${String(i+1).padStart(2,'0')} · ${q.prompt}`;details.append(summary);['Sua resposta: '+q.options[state.answers[i]],'Resposta correta: '+q.options[q.answer],q.explanation].forEach(text=>{const p=document.createElement('p');p.textContent=text;details.append(p)});$('review').append(details)})}
+$('restart').onclick=()=>$('reset-dialog').showModal();$('cancel-reset').onclick=()=>$('reset-dialog').close();$('accept-reset').onclick=()=>{$('reset-dialog').close();fresh();render()};welcome();
+
+</script></body></html>
